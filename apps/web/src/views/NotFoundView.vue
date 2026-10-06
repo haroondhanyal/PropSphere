@@ -1,0 +1,1 @@
+<template><main class="page-container route-message"><div class="eyebrow muted-eyebrow">PAGE NOT FOUND</div><h1>This page isn’t here</h1><p>The link may have changed. Go back to the marketplace and find your way from there.</p><RouterLink class="button button-primary" to="/">Back to PropSphere</RouterLink></main></template>

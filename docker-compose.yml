@@ -1,0 +1,71 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-propsphere}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-propsphere}
+      POSTGRES_DB: ${POSTGRES_DB:-propsphere}
+    ports:
+      - target: 5432
+        published: "${POSTGRES_PORT:-5433}"
+        host_ip: "${POSTGRES_HOST_IP:-127.0.0.1}"
+        protocol: tcp
+    volumes:
+      - propsphere-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    profiles: ["app"]
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL_DOCKER:-postgresql://propsphere:propsphere@postgres:5432/propsphere?schema=public}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      API_PORT: 3000
+      WEB_URL: ${WEB_URL_DOCKER:-http://localhost:8080}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SAFEPAY_ENV: ${SAFEPAY_ENV:-sandbox}
+      SAFEPAY_API_KEY: ${SAFEPAY_API_KEY:-}
+      SAFEPAY_SECRET_KEY: ${SAFEPAY_SECRET_KEY:-}
+      SAFEPAY_WEBHOOK_SECRET: ${SAFEPAY_WEBHOOK_SECRET:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 4s
+      retries: 5
+      start_period: 25s
+    ports:
+      - "3000:3000"
+
+  web:
+    profiles: ["app"]
+    build:
+      context: .
+      target: web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+volumes:
+  propsphere-postgres:

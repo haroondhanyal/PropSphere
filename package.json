@@ -1,0 +1,17 @@
+{
+  "name": "propsphere",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web", "apps/api"],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm:dev --workspace @propsphere/api\" \"npm:dev --workspace @propsphere/web\"",
+    "build": "npm run build --workspace @propsphere/api && npm run build --workspace @propsphere/web",
+    "db:generate": "npm run db:generate --workspace @propsphere/api",
+    "db:migrate": "npm run db:migrate --workspace @propsphere/api",
+    "db:seed": "npm run db:seed --workspace @propsphere/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "dotenv-cli": "^8.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" fill="none">
+  <defs>
+    <linearGradient id="roof" x1="24" y1="25" x2="144" y2="142" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#36D6B0"/>
+      <stop offset="1" stop-color="#4388FF"/>
+    </linearGradient>
+    <linearGradient id="word" x1="190" y1="48" x2="560" y2="132" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102B46"/>
+      <stop offset="1" stop-color="#2675B8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="164" height="164" rx="42" fill="#F1F8FC"/>
+  <path d="M36 83.5 90 38l54 45.5v48a8 8 0 0 1-8 8H44a8 8 0 0 1-8-8v-48Z" fill="url(#roof)"/>
+  <path d="M68 139V98a22 22 0 0 1 44 0v41H68Z" fill="#fff"/>
+  <path d="M28 84 90 31l62 53" stroke="#102B46" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="132" cy="49" r="12" fill="#F4B860"/>
+  <text x="198" y="111" fill="url(#word)" font-family="Inter, Avenir, Arial, sans-serif" font-size="68" font-weight="750" letter-spacing="-3">PropSphere</text>
+  <text x="202" y="145" fill="#648099" font-family="Inter, Avenir, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="3.5">PROPERTY, CONNECTED</text>
+</svg>
