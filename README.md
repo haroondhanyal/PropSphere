@@ -13,7 +13,7 @@
   <img alt="PostgreSQL" src="https://img.shields.io/badge/Database-PostgreSQL-4169e1?logo=postgresql&logoColor=white" />
 </p>
 
-<p align="center"><a href="#quick-start">Quick start</a> · <a href="#system-architecture">Architecture</a> · <a href="#roles-and-access">Roles</a> · <a href="#fresh-screenshots-and-screen-guide">Screenshots</a> · <a href="#local-configuration">Configuration</a> · <a href="#troubleshooting">Troubleshooting</a></p>
+<p align="center"><a href="#quick-start">Quick start</a> · <a href="#system-architecture">Architecture</a> · <a href="#roles-and-access">Roles</a> · <a href="#project-screenshots">Project screenshots</a> · <a href="#automation-screenshots">Automation screenshots</a> · <a href="#local-configuration">Configuration</a> · <a href="#troubleshooting">Troubleshooting</a></p>
 
 ---
 
@@ -137,7 +137,7 @@ erDiagram
 
 Keep feature code in the existing workspaces; there is no separate shared package or root-level Prisma project. Add a business module only when it has a clear workflow boundary.
 
-## Fresh screenshots and screen guide
+## Project screenshots
 
 These screenshots were captured from the running app on **October 6, 2026** using seeded demo data. Desktop captures use a 1440 px viewport; the two mobile captures use a 390 px viewport. The images show illustrative sample records, not live property offers. Select any thumbnail to open its full-size capture.
 
@@ -494,7 +494,7 @@ Safepay and SMTP integrations are implemented but require your own merchant/emai
 
 The source logo is [`docs/propsphere-logo.svg`](docs/propsphere-logo.svg). It is an editable vector mark for the README and product shell.
 
-## Automation workflows and report screenshots
+## Automation screenshots
 
 This section documents the complete Playwright → Allure workflow and the independent k6 performance workflow. The screenshots below were freshly captured on **7 October 2026** from the local report server. The Allure images show the saved **900-case** run; the k6 images show the saved **200-case** run. Capturing these images does not rerun either suite.
 
