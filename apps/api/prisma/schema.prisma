@@ -165,7 +165,10 @@ model User {
   organization        Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name                String
   email               String                   @unique
+  accountType         String                   @default("OWNER")
+  phone               String?
   passwordHash        String
+  avatarUrl           String?
   role                Role                     @default(BUYER)
   createdAt           DateTime                 @default(now())
   properties          Property[]               @relation("CreatedProperties")
@@ -238,6 +241,8 @@ model Property {
   areaSqft            Int
   imageUrl            String
   galleryUrls         String[]             @default([])
+  streetAddress       String?
+  floors              Int?
   isDemo              Boolean              @default(false)
   verified            Boolean              @default(false)
   status              ListingStatus        @default(DRAFT)

@@ -1,4 +1,5 @@
-import { Injectable, Logger, Module } from '@nestjs/common'
+import { Body, Controller, Injectable, Logger, Module, Post, ServiceUnavailableException } from '@nestjs/common'
+import { IsEmail, IsString, MaxLength } from 'class-validator'
 import { Cron } from '@nestjs/schedule'
 import nodemailer, { Transporter } from 'nodemailer'
 import type { Prisma } from '@prisma/client'
@@ -25,6 +26,29 @@ export class EmailService {
     if (!this.ready || !this.transport) return false
     await this.transport.sendMail({ from: process.env.SMTP_FROM, to, subject, text, html })
     return true
+  }
+}
+
+class ContactMessageDto {
+  @IsString() @MaxLength(100) name!: string
+  @IsEmail() email!: string
+  @IsString() @MaxLength(100) topic!: string
+  @IsString() @MaxLength(2000) message!: string
+}
+
+@Controller('contact')
+class ContactController {
+  constructor(private email: EmailService) {}
+
+  @Post()
+  async send(@Body() dto: ContactMessageDto) {
+    const recipient = process.env.CONTACT_EMAIL || process.env.SMTP_FROM
+    if (!recipient || !this.email.ready) throw new ServiceUnavailableException('Contact email delivery is not configured yet.')
+    const text = `Website contact request\n\nFrom: ${dto.name} <${dto.email}>\nTopic: ${dto.topic}\n\n${dto.message}`
+    const html = `<h2>PropSphere website contact request</h2><p><b>From:</b> ${escapeHtml(dto.name)} &lt;${escapeHtml(dto.email)}&gt;</p><p><b>Topic:</b> ${escapeHtml(dto.topic)}</p><p>${escapeHtml(dto.message).replace(/\n/g, '<br/>')}</p>`
+    const sent = await this.email.send(recipient, `PropSphere contact: ${dto.topic.replace(/[\r\n]/g, ' ').slice(0, 100)}`, text, html)
+    if (!sent) throw new ServiceUnavailableException('Contact email delivery is not configured yet.')
+    return { message: 'Thanks for reaching out. Your message has been sent to our team.' }
   }
 }
 
@@ -111,5 +135,5 @@ function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
 }
 
-@Module({ providers: [EmailService, NotificationsService], exports: [EmailService, NotificationsService] })
+@Module({ controllers: [ContactController], providers: [EmailService, NotificationsService], exports: [EmailService, NotificationsService] })
 export class CommunicationsModule {}

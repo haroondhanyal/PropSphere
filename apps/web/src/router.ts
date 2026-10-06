@@ -21,10 +21,16 @@ import DevelopmentsView from './views/DevelopmentsView.vue'
 import FinanceView from './views/FinanceView.vue'
 import StaysView from './views/StaysView.vue'
 import AdminView from './views/AdminView.vue'
+import AdminLayout from './views/AdminLayout.vue'
 import VendorBillsView from './views/VendorBillsView.vue'
 import SignupView from './views/SignupView.vue'
 import PasswordView from './views/PasswordView.vue'
 import SalesTeamView from './views/SalesTeamView.vue'
+import ProfileView from './views/ProfileView.vue'
+import AboutView from './views/AboutView.vue'
+import FeaturesView from './views/FeaturesView.vue'
+import PlansView from './views/PlansView.vue'
+import ContactView from './views/ContactView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta { auth?: boolean; admin?: boolean; roles?: string[] }
@@ -34,11 +40,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: HomeView },
+    { path: '/about', component: AboutView },
+    { path: '/features', component: FeaturesView },
+    { path: '/plans', component: PlansView },
+    { path: '/contact', component: ContactView },
     { path: '/search', component: SearchView },
     { path: '/property/:slug', component: PropertyView },
     { path: '/favorites', component: FavoritesView },
     { path: '/stays', component: StaysView },
     { path: '/list-property', component: SubmitListingView, meta: { auth: true } },
+    { path: '/profile', component: ProfileView, meta: { auth: true } },
     { path: '/workspace', component: WorkspaceLayout, meta: { auth: true }, children: [
       { path: '', component: WorkspaceHomeView },
       { path: 'leads', component: LeadsView, meta: { roles: ['ADMIN', 'AGENT'] } },
@@ -56,8 +67,10 @@ const router = createRouter({
       { path: 'finance', component: FinanceView, meta: { roles: ['ADMIN', 'OWNER', 'FINANCE'] } },
       { path: 'vendor-bills', component: VendorBillsView, meta: { roles: ['ADMIN', 'OWNER', 'FINANCE', 'VENDOR'] } },
     ] },
-    { path: '/admin', component: AdminView, meta: { admin: true } },
-    { path: '/admin/review', component: ReviewView, meta: { admin: true } },
+    { path: '/admin', component: AdminLayout, meta: { admin: true }, children: [
+      { path: '', component: AdminView },
+      { path: 'review', component: ReviewView },
+    ] },
     { path: '/login', component: LoginView },
     { path: '/signup', component: SignupView },
     { path: '/forgot-password', component: PasswordView },
@@ -70,15 +83,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const session = localStorage.getItem('propsphere-session')
+  const session = localStorage.getItem('propsphere-session') || sessionStorage.getItem('propsphere-session')
   if (to.meta.auth && !session) return `/login?next=${encodeURIComponent(to.fullPath)}`
-  if (to.meta.admin && !session) return `/login?next=${encodeURIComponent(to.fullPath)}`
+  if (to.meta.admin && !session) return `/login?portal=admin&next=${encodeURIComponent(to.fullPath)}`
   if (session) {
     try {
       const role = JSON.parse(session).user.role as string
       if (to.meta.admin && role !== 'ADMIN') return '/unauthorized'
       if (to.meta.roles && !to.meta.roles.includes(role)) return '/unauthorized'
-    } catch { localStorage.removeItem('propsphere-session'); localStorage.removeItem('propsphere-token'); return '/login' }
+    } catch { localStorage.removeItem('propsphere-session'); localStorage.removeItem('propsphere-token'); sessionStorage.removeItem('propsphere-session'); sessionStorage.removeItem('propsphere-token'); return '/login' }
   }
 })
 

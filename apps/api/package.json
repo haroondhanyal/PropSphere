@@ -7,7 +7,7 @@
     "build": "nest build",
     "db:generate": "prisma generate",
     "db:migrate": "dotenv -e ../../.env -- prisma migrate dev --name init",
-    "db:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts",
+    "db:seed": "dotenv -e ../../.env -- node --import tsx prisma/seed.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

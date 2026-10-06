@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { Heart, BedDouble, Bath, MoveUpRight, BadgeCheck } from 'lucide-vue-next'
 import type { Property } from '../types'
-import { api } from '../api'
+import { api, mediaUrl } from '../api'
 
 const props = defineProps<{ property: Property }>()
 const favorites = ref<string[]>(JSON.parse(localStorage.getItem('propsphere-favorites') || '[]'))
@@ -38,7 +38,7 @@ const formattedPrice = computed(() => props.property.purpose === 'RENT' ? `PKR $
 <template>
   <article class="property-card">
     <RouterLink :to="`/property/${property.slug}`" class="property-image-wrap">
-      <img class="property-image" :src="property.imageUrl" :alt="property.title" loading="lazy" />
+      <img class="property-image" :src="mediaUrl(property.imageUrl)" :alt="property.title" loading="lazy" />
       <span class="image-label">{{ property.purpose === 'SALE' ? 'FOR SALE' : 'FOR RENT' }}</span>
       <span v-if="property.isDemo" class="demo-label">SAMPLE PHOTO</span>
       <span v-if="property.verified" class="verified"><BadgeCheck :size="14" /> Verified</span>

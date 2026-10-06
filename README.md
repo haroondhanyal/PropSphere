@@ -37,13 +37,13 @@ npm run db:seed
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The API is at `http://127.0.0.1:3000/api`, its health check is `/api/health`, and local Swagger is at `http://127.0.0.1:3000/docs`. Demo sign-ins and occupied-port alternatives are in [Local development](#local-setup).
+Open `http://127.0.0.1:5174`. The API is at `http://127.0.0.1:3002/api`, its health check is `/api/health`, and local Swagger is at `http://127.0.0.1:3002/docs`. Demo sign-ins and port configuration are in [Local setup](#local-setup).
 
 ## Product screens
 
 | Area | Main screens |
 | --- | --- |
-| Marketplace | Home, search results (list/map-ready), property details, saved properties |
+| Marketplace | Home, search results, property details, saved properties, About, Features, Plans, Contact |
 | Buyer and tenant | Overview, viewings, offers/applications, bookings, lease/payments, maintenance, messages |
 | Owner and manager | Portfolio, properties/units, tenants/leases, rent ledger, maintenance, statements |
 | Agent CRM | Leads, lead details, pipeline, viewings, offers, tasks |
@@ -57,6 +57,9 @@ Open `http://127.0.0.1:5173`. The API is at `http://127.0.0.1:3000/api`, its hea
 Screens share the same records and permissions. For example, an approved listing is searchable; a viewing creates an agent activity; an accepted rental application can become a lease; rent and maintenance costs flow into owner statements.
 
 ## Roles and access
+
+Admins enter the separate **Admin Console** at `/admin` (or choose **Sign in as Admin** on the public sign-in screen). Its sidebar links to administration, listing approvals, and the organization workspace tools; server and route role checks still require an `ADMIN` membership. “Keep me signed in” stores the session in browser local storage for the selected token lifetime; leaving it unchecked keeps it in session storage. Password fields use the browser password manager through standard autocomplete hints; PropSphere never stores a plaintext password in browser storage.
+
 
 Roles belong to an organization membership. The API checks the current membership on each authenticated request, so a role change takes effect without waiting for a token to expire. A user can belong to multiple organizations and switch the active workspace.
 
@@ -91,7 +94,7 @@ flowchart LR
 
 ### Request and data boundaries
 
-1. A user signs in or creates a workspace. The API returns an eight-hour JWT and organization membership details.
+1. A user signs in or creates a workspace. Login returns an eight-hour JWT by default; selecting “Keep me signed in” requests a 30-day JWT.
 2. The Vue client sends the JWT as a Bearer token for authenticated API calls.
 3. `AuthGuard` verifies the token and looks up the user's active organization membership; role authorization uses that live membership.
 4. API services scope organization records using `organizationId` and apply user/assignment filters for private customer, owner, and salesperson records.
@@ -139,7 +142,7 @@ Keep feature code in the existing workspaces; there is no separate shared packag
 These screenshots were captured from the running app on **October 6, 2026** using seeded demo data. Desktop captures use a 1440 px viewport; the two mobile captures use a 390 px viewport. The images show illustrative sample records, not live property offers. Select any thumbnail to open its full-size capture.
 
 <details>
-<summary>Open the full screenshot gallery (32 captures)</summary>
+<summary>Open the full screenshot gallery (37 captures)</summary>
 
 <table>
 <tr>
@@ -184,6 +187,46 @@ These screenshots were captured from the running app on **October 6, 2026** usin
 <td><a href="docs/screenshots/workspace-overview-mobile.jpg"><img src="docs/screenshots/workspace-overview-mobile.jpg" width="230" alt="Workspace overview on mobile" /></a><br /><sub>Workspace overview · mobile</sub></td>
 </tr>
 </table>
+</details>
+
+### Admin console screenshots, section by section
+
+Fresh captures use the seeded demo records. Select a thumbnail to open the full screenshot.
+
+<details>
+<summary>Open the Admin Console sections and all admin workspace screens (21 captures)</summary>
+
+**Administration**
+
+| Screen | Screenshot | What is shown |
+| --- | --- | --- |
+| Users and roles | <a href="docs/screenshots/admin-users-roles.jpg"><img src="docs/screenshots/admin-users-roles.jpg" width="220" alt="Admin user and role management" /></a> | Organization member list, role controls, and account invitation form. |
+| Listing approvals | <a href="docs/screenshots/listing-review.jpg"><img src="docs/screenshots/listing-review.jpg" width="220" alt="Admin listing review queue" /></a> | Pending listings, property photos, key facts, and approve/reject actions. |
+| Risk review | <a href="docs/screenshots/admin-risk-review.jpg"><img src="docs/screenshots/admin-risk-review.jpg" width="220" alt="Admin risk review screen" /></a> | Open and resolved risk flags with severity and review actions. |
+| Audit history | <a href="docs/screenshots/admin-audit-history.jpg"><img src="docs/screenshots/admin-audit-history.jpg" width="220" alt="Admin audit history" /></a> | Organization audit events, action names, and affected records. |
+| Organization settings | <a href="docs/screenshots/admin-organization-settings.jpg"><img src="docs/screenshots/admin-organization-settings.jpg" width="220" alt="Admin organization settings" /></a> | Workspace settings and editable configuration values. |
+| Admin on mobile | <a href="docs/screenshots/admin-workspace-mobile.jpg"><img src="docs/screenshots/admin-workspace-mobile.jpg" width="180" alt="Admin console on a mobile screen" /></a> | Responsive admin navigation and the organization control screen at 390 px. |
+
+**Admin workspace tools**
+
+| Section | Screenshot | Screen details |
+| --- | --- | --- |
+| Workspace overview | <a href="docs/screenshots/workspace-overview.jpg"><img src="docs/screenshots/workspace-overview.jpg" width="180" alt="Admin workspace overview" /></a> | Portfolio, leads, viewings, leases, rent, offers, and maintenance KPIs. |
+| Properties and units | <a href="docs/screenshots/portfolio-units.jpg"><img src="docs/screenshots/portfolio-units.jpg" width="180" alt="Admin property portfolio and units" /></a> | Listing photos, portfolio details, buildings, and rental units. |
+| Sales team | <a href="docs/screenshots/sales-team.jpg"><img src="docs/screenshots/sales-team.jpg" width="180" alt="Sales team screen" /></a> | Five salesperson summaries and organization pipeline totals. |
+| Customer leads | <a href="docs/screenshots/sales-pipeline.jpg"><img src="docs/screenshots/sales-pipeline.jpg" width="180" alt="Customer lead pipeline" /></a> | Contact and property details, lead stage, and follow-up data. |
+| Customer inbox | <a href="docs/screenshots/inbox.jpg"><img src="docs/screenshots/inbox.jpg" width="180" alt="Customer inbox screen" /></a> | Property enquiry conversations and customer message history. |
+| Viewings | <a href="docs/screenshots/viewings.jpg"><img src="docs/screenshots/viewings.jpg" width="180" alt="Property viewings screen" /></a> | Requested and scheduled property visits. |
+| Offers and applications | <a href="docs/screenshots/offers-applications.jpg"><img src="docs/screenshots/offers-applications.jpg" width="180" alt="Offers and rental applications" /></a> | Purchase offers, rental applications, and their current status. |
+| Leases | <a href="docs/screenshots/leases.jpg"><img src="docs/screenshots/leases.jpg" width="180" alt="Lease management screen" /></a> | Tenants, rental properties, lease dates, and monthly rent. |
+| Rent and payments | <a href="docs/screenshots/rent-payments.jpg"><img src="docs/screenshots/rent-payments.jpg" width="180" alt="Rent ledger and payment history" /></a> | Rent invoices, open balances, receipts, and payment history. |
+| Finance | <a href="docs/screenshots/finance.jpg"><img src="docs/screenshots/finance.jpg" width="180" alt="Organization finance screen" /></a> | Income, expenses, owner payouts, and finance records. |
+| Vendor bills | <a href="docs/screenshots/vendor-bills.jpg"><img src="docs/screenshots/vendor-bills.jpg" width="180" alt="Vendor invoice review" /></a> | Supplier invoices, linked maintenance work, and review status. |
+| Maintenance | <a href="docs/screenshots/maintenance.jpg"><img src="docs/screenshots/maintenance.jpg" width="180" alt="Property maintenance requests" /></a> | Work orders, priority, service providers, and job status. |
+| Developments | <a href="docs/screenshots/developments.jpg"><img src="docs/screenshots/developments.jpg" width="180" alt="Development projects and units" /></a> | Projects, unit inventory, reservations, and installments. |
+| Short stays | <a href="docs/screenshots/workspace-stays.jpg"><img src="docs/screenshots/workspace-stays.jpg" width="180" alt="Short stay management" /></a> | Furnished stay listings, nightly prices, and bookings. |
+| Saved searches | <a href="docs/screenshots/saved-searches.jpg"><img src="docs/screenshots/saved-searches.jpg" width="180" alt="Saved search alerts" /></a> | Buyer search criteria and email alert preferences. |
+
 </details>
 
 ### What each screen and panel does
@@ -313,13 +356,20 @@ Copy `.env.example` to `.env`. Keep local credentials in `.env`; it is ignored b
 | `DATABASE_URL` | Local API | PostgreSQL connection used by Prisma |
 | `DATABASE_URL_DOCKER` | Container API | PostgreSQL connection from the API container to the Compose service |
 | `JWT_SECRET` | Production | Random signing secret of at least 32 characters; replace the example value |
-| `API_PORT` | No | API listener port; defaults to `3000` |
-| `VITE_API_URL` | No | Browser-visible API base URL; defaults to `http://127.0.0.1:3000/api` |
+| `API_PORT` | No | Local API listener; defaults to `3002` to avoid common local app ports (`3000` remains the Docker container port) |
+| `VITE_API_URL` | No | Browser-visible API base URL; local default is `http://127.0.0.1:3002/api`; production uses the same-origin `/api` proxy |
 | `WEB_URL`, `CORS_ORIGINS` | Local/API | Reset-link origin and explicit browser origins allowed by the API |
 | `SMTP_*` | Optional | Password-reset and workflow email delivery; blank disables email |
+| `CONTACT_EMAIL` | Optional | Recipient for website contact forms; falls back to `SMTP_FROM` |
 | `SAFEPAY_*` | Optional | Safepay hosted checkout and signed webhook configuration |
 
 Values used inside Docker differ from browser-visible local URLs; see `.env.example` and `docker-compose.yml`. A browser must be able to reach `VITE_API_URL`, and that exact browser origin must be present in `CORS_ORIGINS`.
+
+## Marketplace browsing and listing
+
+The marketplace is responsive on mobile and desktop, with a persistent bottom navigation dock and four saved themes: Light, Dark, Ocean, and Forest. The homepage combines search, grouped property types, featured listings, and automatic latest-listing loading as you scroll. Search matches listing title, city, and area; it filters and sorts by price or area, then fetches the next page while scrolling. Listing detail pages show sale/rent pricing, size, bedrooms, bathrooms, floors, address, image/video gallery, nearby listings, and a Google Maps directions link. Signed-in members can update their profile and photo, and sign up with a buyer, tenant, or property-owner account type. Owners can submit a listing with a combined maximum of 50 MB of photos and videos; listings still go through admin review. Local uploads are stored under `apps/api/uploads`; Docker persists uploads in the `propsphere-media` volume.
+
+The public About, Features, Plans, and Contact pages describe the product without claiming unlaunched billing. Contact messages are emailed through SMTP to `CONTACT_EMAIL` (or `SMTP_FROM` when no contact address is set). Platform subscriptions do not yet have recurring checkout; Safepay is currently used for rent invoices only. Inbox messages and daily saved-search digests also need the optional SMTP configuration described below.
 
 ## Implemented Phase 1–3 workflows
 
@@ -362,13 +412,13 @@ npm run db:seed
 npm run dev
 ```
 
-By default the web app runs at `http://127.0.0.1:5173`; API and Swagger run at `http://127.0.0.1:3000` and `http://127.0.0.1:3000/docs`.
+By default the web app runs at `http://127.0.0.1:5174`; API and Swagger run at `http://127.0.0.1:3002` and `http://127.0.0.1:3002/docs`.
 
 On the screenshot workstation, another local app already occupies ports `3000` and `3001`, so this PropSphere session is running on web `http://127.0.0.1:5174` and API `http://127.0.0.1:3002` (Swagger: `http://127.0.0.1:3002/docs`). Start the same port mapping on this machine with:
 
 ```bash
 API_PORT=3002 CORS_ORIGINS=http://127.0.0.1:5174 WEB_URL=http://127.0.0.1:5174 npm run dev --workspace @propsphere/api
-VITE_API_URL=http://127.0.0.1:3002/api npm run dev --workspace @propsphere/web -- --port 5174
+VITE_API_URL=http://127.0.0.1:3002/api npm run dev --workspace @propsphere/web
 ```
 
 Run those two commands in **separate terminals**. The API listens on `3002`; Vite serves the browser app on `5174`. If your ports differ, update all four values together: `API_PORT`, `VITE_API_URL`, `WEB_URL`, and `CORS_ORIGINS`.
@@ -391,7 +441,7 @@ Before sharing a change, run `npm run build` and `git diff --check`. With the AP
 
 ### Demo inventory and accounts
 
-`npm run db:seed` idempotently creates **150 sample listings** across Islamabad, Rawalpindi, Lahore, Karachi, Peshawar, Faisalabad, Multan, Quetta, Hyderabad, and Sialkot. Inventory includes sale and rental homes, apartments, villas, offices, shops, commercial units, land, warehouses, and factories. The same seed creates eleven demo accounts, including one sales manager and five salespeople. Use password `Phase1Demo!` for each:
+`npm run db:seed` idempotently creates **150 sample listings** across Islamabad, Rawalpindi, Lahore, Karachi, Peshawar, Faisalabad, Multan, Quetta, Hyderabad, and Sialkot. Inventory includes sale and rental homes, apartments, villas, offices, shops, commercial units, land, warehouses, and factories. The same seed creates 21 demo accounts: one admin, one sales manager, five salespeople, five buyers, four owners, four tenants, and one vendor. Use password `Phase1Demo!` for each:
 
 | Name | Email | Role |
 | --- | --- | --- |
@@ -406,14 +456,35 @@ Before sharing a change, run `npm run build` and `git diff --check`. With the AP
 | Mariam Noor | `tenant@propsphere.local` | Tenant |
 | Zain Ahmed | `buyer@propsphere.local` | Buyer |
 | Northside Service Team | `vendor@propsphere.local` | Vendor |
+| Amina Farooq | `buyer2@propsphere.local` | Buyer |
+| Raza Mahmood | `buyer3@propsphere.local` | Buyer |
+| Hira Javed | `buyer4@propsphere.local` | Buyer |
+| Daniyal Sheikh | `buyer5@propsphere.local` | Buyer |
+| Farah Zubair | `owner2@propsphere.local` | Owner |
+| Usman Qureshi | `owner3@propsphere.local` | Owner |
+| Sadia Ahmed | `owner4@propsphere.local` | Owner |
+| Noor Hassan | `tenant2@propsphere.local` | Tenant |
+| Muneeb Aslam | `tenant3@propsphere.local` | Tenant |
+| Iqra Malik | `tenant4@propsphere.local` | Tenant |
 
-The seeded property records, prices, availability, and locations are **fictional demo data**, not live offers. Listing photos are illustrative stock images from Pexels; they do not depict or verify the named Pakistani addresses. Sample listings are marked in the UI. The image sources include [residential exteriors](https://www.pexels.com/photo/modern-house-exterior-design-8134821/), [apartment interiors](https://www.pexels.com/photo/modern-apartment-interior-design-11296222/), and [industrial warehouses](https://www.pexels.com/photo/exterior-of-warehouse-buildings-8556704/). See the [Pexels license](https://www.pexels.com/license/).
+The seeded property records, prices, availability, and locations are **fictional demo data**, not live offers. The fresh Pexels photos are stock imagery; they do not depict or verify the named Pakistani addresses. Sample listings are marked in the UI. All 21 local accounts use the demo-only password `Phase1Demo!`; the seed stores bcrypt hashes in PostgreSQL.
+
+### Fresh property image map
+
+| Listing group | Photo use | Pexels photo references |
+| --- | --- | --- |
+| Houses and villas | Listing cards, detail cover, review queue, owner portfolio | [Modern home exterior](https://www.pexels.com/photo/modern-luxury-house-with-spacious-garage-entrance-34188579/), [garden home](https://www.pexels.com/photo/charming-garden-view-of-a-modern-house-35386183/), [contemporary house](https://www.pexels.com/photo/modern-minimalist-house-with-greenery-33752181/) |
+| Apartments and interiors | Residential listing galleries, rentals, short stays | [Apartment interior](https://www.pexels.com/photo/modern-minimalist-apartment-interior-design-33054912/), [warm living room](https://www.pexels.com/photo/modern-living-room-interior-in-jakarta-apartment-34956623/), [city apartment](https://www.pexels.com/photo/interior-of-a-modern-apartment-22743872/) |
+| Offices and commercial | Offices, shops, commercial inventory | [Modern office](https://www.pexels.com/photo/modern-office-interior-with-workstations-33827307/), [minimal workspace](https://www.pexels.com/photo/modern-office-space-with-minimalist-design-32216281/), [glass office exterior](https://www.pexels.com/photo/modern-office-building-with-glass-facade-35158336/) |
+| Industrial | Warehouses and factory inventory | [Warehouse interior](https://www.pexels.com/photo/industrial-warehouse-interior-under-skylight-31771243/), [industrial workspace](https://www.pexels.com/photo/industrial-interior-of-a-modern-warehouse-34315423/), [warehouse exterior](https://www.pexels.com/photo/exterior-of-warehouse-buildings-8556704/) |
+
+`npm run db:seed` refreshes the image URL and three-photo gallery on all seeded catalog listings, review samples, and stays. Photo records are grouped in `apps/api/prisma/seed.ts`; the reusable groups are `home`, `commercial`, and `industrial`. Pexels lists these as free stock photos; see the [Pexels license](https://www.pexels.com/license/).
 
 Visitors can create a workspace at `/signup`; the first account becomes that workspace's admin. `/login` supports existing accounts. Password recovery is available from the login screen and sends one-hour reset links when SMTP is configured. Add SMTP values to `.env` to deliver email. Each new signup creates a separate organization and admin membership.
 
-The seed also includes one development project/unit, a furnished short-stay listing, and records for trying the core workflows.
+The seed also includes 10–15 linked sample records across the admin queue, inbox, sales leads, viewings, offers and rental applications, leases and rent, maintenance and vendor bills, risks, audit activity, settings, saved searches, development inventory, short stays/bookings, and finance. Task lists have 12 demo tasks per salesperson; five salespeople remain available for team comparisons. Seed records are stable across reruns and are illustrative demo data.
 
-Safepay and SMTP integrations are implemented but require your own merchant/email credentials. The development server still runs as documented above; for a containerized deployment, copy `.env.example` to `.env`, set a strong `JWT_SECRET` and production database URL/secrets, then run `docker compose --profile app up --build -d`. The web app is served at port `8080`, and the API at port `3000`. Put HTTPS termination and persistent production database backups in front of this starter before handling real customers or payments.
+Safepay and SMTP integrations are implemented but require your own merchant/email credentials. For a containerized deployment, copy `.env.example` to `.env`, set a strong `JWT_SECRET` and production database URL/secrets, then run `docker compose --profile app up --build -d`. The web app is served at port `8080`, and the API at host port `3002` (container port `3000`). The API is proxied under `/api`, and uploaded media uses the persistent `propsphere-media` volume.
 
 ## Logo
 

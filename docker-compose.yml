@@ -30,6 +30,7 @@ services:
       DATABASE_URL: ${DATABASE_URL_DOCKER:-postgresql://propsphere:propsphere@postgres:5432/propsphere?schema=public}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       API_PORT: 3000
+      MEDIA_DIR: /app/uploads
       WEB_URL: ${WEB_URL_DOCKER:-http://localhost:8080}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
@@ -53,7 +54,9 @@ services:
       retries: 5
       start_period: 25s
     ports:
-      - "3000:3000"
+      - "3002:3000"
+    volumes:
+      - propsphere-media:/app/uploads
 
   web:
     profiles: ["app"]
@@ -69,3 +72,4 @@ services:
 
 volumes:
   propsphere-postgres:
+  propsphere-media:
