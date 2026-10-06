@@ -437,7 +437,11 @@ Run those two commands in **separate terminals**. The API listens on `3002`; Vit
 
 ### Local verification
 
-Before sharing a change, run `npm run build` and `git diff --check`. With the API and database running, `GET /api/health` should return `{"status":"ok","database":"connected"}`. The repository does not currently define a dedicated automated test script.
+Before sharing a change, run `npm run build` and `git diff --check`. With the API and database running, `GET /api/health` should return `{"status":"ok","database":"connected"}`.
+
+### QA automation and performance
+
+The separate [`automation/`](automation/playwright-automation/README.md) setup includes a page object and paired locator file for all **34 application screens**, 900 distinct DB/API/BDD/UI cases, plus a 200-case k6 performance suite. Every BDD/UI test attaches screenshots and videos; failures also include traces, and API/database checks attach request evidence to Allure. The reports share the PropSphere logo and independent header/report themes; Allure links directly to k6 results, including its native summary and a searchable case-by-case performance dashboard. See the [automation guide](automation/playwright-automation/README.md) and [k6 guide](automation/performance-testing/k6/README.md) for report troubleshooting and run instructions. Latest saved Allure run: **900/900 passed**; regenerate the report with `npm run automation:report`.
 
 ### Demo inventory and accounts
 
@@ -489,3 +493,107 @@ Safepay and SMTP integrations are implemented but require your own merchant/emai
 ## Logo
 
 The source logo is [`docs/propsphere-logo.svg`](docs/propsphere-logo.svg). It is an editable vector mark for the README and product shell.
+
+## Automation workflows and report screenshots
+
+This section documents the complete Playwright → Allure workflow and the independent k6 performance workflow. The screenshots below were freshly captured on **7 October 2026** from the local report server. The Allure images show the saved **900-case** run; the k6 images show the saved **200-case** run. Capturing these images does not rerun either suite.
+
+### Playwright and Allure
+
+Playwright keeps its environment and browser setup in `automation/playwright-automation/config/`, fixed fixtures in `data/`, screen-specific page objects in `pages/`, and matching screen locators in `locators/`. Tests are grouped by database, API, BDD, and UI purpose in `tests/`. Shared authentication, generated test data, form helpers, and evidence hooks live in `utils/` and `tests/support/`. UI and BDD results attach screenshots and videos; failures include traces, while API and database results attach request/query evidence.
+
+Run a focused suite or the complete suite from the repository root:
+
+```sh
+npm run automation:test:public
+npm run automation:test:admin
+npm run automation:test:api
+npm run automation:test:db
+npm run automation:test:bdd
+npm run automation:test:ui
+npm run automation:test
+```
+
+After a run, generate the branded Allure report and start the combined report server:
+
+```sh
+npm run automation:report
+npm run automation:report:serve
+```
+
+Open `http://127.0.0.1:4178/` for the QA center or `http://127.0.0.1:4178/allure/index.html` for Allure. The Allure report includes Overview, Categories, Suites, Behaviors, Packages, Graphs, Timeline, test steps, attachments, and environment/executor details. Its Graphs page retains the seven Allure analytics widgets: status, severity, duration, category trend, duration trend, history trend, and retry trend. Header shortcuts for UI, API, BDD, and Database open their respective test packages. The Allure header links directly to both k6 reports.
+
+To refresh the report and application images after both local servers are running, use `npm run automation:screenshots`. This captures the QA center, Allure overview/categories/graphs/packages, the k6 dashboard/case/native report, the marketplace home, and the signed-in admin overview under `docs/screenshots/automation/`. It verifies that the public favicon/wordmark and admin logo load, waits for admin data to finish loading, and does not start tests or change saved results. Browser screenshots require the separate Playwright installation described in [`automation/playwright-automation/README.md`](automation/playwright-automation/README.md).
+
+<details>
+<summary>Fresh screenshots: QA center and Allure report</summary>
+
+**QA report center — branded report links and independent header/content themes**
+
+![PropSphere QA report center](docs/screenshots/automation/qa-report-center.jpg)
+
+**Allure overview — run totals, UI/API/BDD/database links, and evidence summaries**
+
+![Allure overview](docs/screenshots/automation/allure-overview.jpg)
+
+**Categories — 900 total, 900 passed, zero failed or skipped, with suite/category coverage**
+
+![Allure categories](docs/screenshots/automation/allure-categories.jpg)
+
+**Graphs — native Allure status, severity, duration, duration trend, retries, and category/history trends**
+
+![Allure graphs](docs/screenshots/automation/allure-graphs.jpg)
+
+**Packages — the navigable suite and test-case hierarchy**
+
+![Allure packages](docs/screenshots/automation/allure-packages.jpg)
+
+</details>
+
+### k6 performance workflow
+
+Install k6, configure `API_BASE_URL` if needed, and run the 200 named, read-only property search cases:
+
+```sh
+npm run performance:test
+npm run performance:report
+npm run automation:report:serve
+```
+
+`performance:test` executes the workload and writes raw k6 JSON, the native `handleSummary()` JSON/text output, CLI output, and report data in the ignored `automation/performance-testing/k6/report-output/` directory. `performance:report` rebuilds both HTML views from existing run data without executing k6 again. The main dashboard at `http://127.0.0.1:4178/performance/index.html` shows latency percentiles, throughput, thresholds, executor configuration, and a searchable table with a direct detail view for each case. Each case detail includes its request/query, response code and size, timing breakdown, checks, scenario, executor, VU, iteration, and timestamp. The separate `http://127.0.0.1:4178/performance/native-k6-report.html` exposes k6's native summary, thresholds, execution profile, CLI output, and JSON data.
+
+<details>
+<summary>Fresh screenshots: k6 dashboard, case execution, and native report</summary>
+
+**Main k6 dashboard — percentile metrics, thresholds, executor profile, and case table**
+
+![k6 performance dashboard](docs/screenshots/automation/k6-performance-dashboard.jpg)
+
+**One case opened directly — request, execution metadata, timing, and individual checks**
+
+![k6 case execution details](docs/screenshots/automation/k6-case-execution-detail.jpg)
+
+**Native k6 report — original summary metrics, thresholds, executor data, CLI output, and JSON**
+
+![Native k6 report](docs/screenshots/automation/k6-native-report.jpg)
+
+</details>
+
+### PropSphere logo on the application
+
+The public application and authentication screens use the full PropSphere wordmark. The admin console now uses a matching PropSphere mark in its sidebar. The same square SVG is the browser tab favicon and touch icon, configured in `apps/web/index.html`. The report center, Allure header, and both k6 reports also use the wordmark.
+
+The capture workflow opens the running public application and signs into the local demo admin from the ignored automation `.env`. It checks that the favicon request succeeds and that both the public header wordmark and protected admin sidebar logo have loaded before saving these fresh screenshots:
+
+<details>
+<summary>Fresh screenshots: PropSphere public and admin interfaces</summary>
+
+**Marketplace home — public navigation and PropSphere wordmark**
+
+![PropSphere marketplace home](docs/screenshots/automation/propsphere-homepage.jpg)
+
+**Admin overview — separate admin workspace and sidebar logo**
+
+![PropSphere admin overview](docs/screenshots/automation/propsphere-admin-overview.jpg)
+
+</details>

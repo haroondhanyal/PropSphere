@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-header="jade" data-content="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b3c">
+  <title>PropSphere · QA Report Center</title>
+  <link rel="icon" href="./propsphere-logo.svg" type="image/svg+xml">
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172224;background:#f4f7f6;font-synthesis:none;text-rendering:optimizeLegibility;--head:#176b61;--surface:#fff;--ink:#172224;--muted:#657274;--line:#dfe8e6;--accent:#176b61;--chip:#e7f4f1}*{box-sizing:border-box}body{margin:0;background:var(--page,#f4f7f6);color:var(--ink);min-height:100vh}.topbar{min-height:88px;background:var(--head);color:white;padding:12px max(24px,calc((100vw - 1180px)/2));display:flex;align-items:center;gap:18px;box-shadow:0 6px 24px #0d252328}.brand-logo{display:block;flex:0 0 auto;width:225px;height:auto;max-height:62px;object-fit:contain;border-radius:13px;background:#fff;padding:6px 10px}.brand h1{font-size:20px;margin:0;letter-spacing:.01em}.brand p{font-size:12px;margin:4px 0 0;opacity:.82}.qa{text-align:right;margin-left:auto;font-size:13px;font-weight:700;white-space:nowrap}.qa small{display:block;font-weight:400;opacity:.8;margin-top:4px}.wrap{max-width:1180px;margin:34px auto;padding:0 24px}.hero{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:32px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;box-shadow:0 14px 44px #1631300b}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-weight:750;color:var(--accent);font-size:11px}.hero h2{font-size:clamp(28px,4vw,43px);line-height:1.08;letter-spacing:-.045em;margin:12px 0}.hero p{color:var(--muted);line-height:1.65;max-width:620px}.report-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:white;background:var(--accent);padding:12px 17px;border-radius:11px;font-weight:700;margin-top:9px}.report-link:hover{filter:brightness(.92)}.note{background:var(--chip);border-radius:17px;padding:22px;align-self:stretch}.note strong{display:block;font-size:13px}.note p{font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:18px 0 30px}.card,.panel{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:18px}.card b{font-size:25px;display:block;letter-spacing:-.04em}.card span{font-size:12px;color:var(--muted)}.panel h3{margin:0 0 7px;font-size:17px}.panel>p{color:var(--muted);font-size:13px;margin:0 0 17px}.palettes{display:grid;grid-template-columns:1fr 1fr;gap:14px}.palette-group{border:1px solid var(--line);border-radius:13px;padding:15px}.palette-group h4{margin:0 0 11px;font-size:12px}.swatches{display:flex;flex-wrap:wrap;gap:8px}.swatch{border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--surface);color:var(--ink);font:inherit;font-size:11px;cursor:pointer}.swatch[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:1px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}.footer{padding:18px 0 32px;text-align:center;color:var(--muted);font-size:11px}html[data-content="dark"]{--page:#111819;--surface:#1b2526;--ink:#eff5f3;--muted:#aab9b6;--line:#354241;--chip:#243a37;--accent:#78d4c0}html[data-content="contrast"]{--page:#000;--surface:#080808;--ink:#fff;--muted:#f0f0f0;--line:#fff;--chip:#222;--accent:#ffec00}html[data-content="grey"]{--page:#e8e9e9;--surface:#f6f6f6;--ink:#282d2e;--muted:#5b6263;--line:#c5caca;--chip:#e4e7e7;--accent:#535d60}html[data-content="blue"]{--page:#edf4fc;--surface:#fff;--ink:#142b43;--muted:#5f7184;--line:#d4e2f0;--chip:#e2eefb;--accent:#2160a4}html[data-content="ocean"]{--page:#e9f5f6;--surface:#fff;--ink:#15353c;--muted:#557177;--line:#cce2e3;--chip:#ddf1f0;--accent:#087f8c}html[data-content="forest"]{--page:#eef4ed;--surface:#fff;--ink:#203628;--muted:#647667;--line:#d7e3d6;--chip:#e3f0df;--accent:#437745}html[data-content="rose"]{--page:#fbf0f1;--surface:#fff;--ink:#3b252b;--muted:#79656a;--line:#ead8dc;--chip:#fae6ea;--accent:#a94b63}@media(max-width:900px){.topbar{gap:13px}.brand-logo{width:190px}.brand h1{font-size:17px}.qa{font-size:11px}}@media(max-width:760px){.topbar{min-height:0;padding:12px 17px;gap:12px;flex-wrap:wrap}.brand-logo{width:176px;max-height:49px}.brand h1{font-size:16px}.brand p{display:none}.qa{font-size:10px}.wrap{margin:19px auto;padding:0 15px}.hero{grid-template-columns:1fr;padding:23px}.cards{grid-template-columns:repeat(2,1fr)}.palettes{grid-template-columns:1fr}}@media(max-width:440px){.brand-logo{width:145px;padding:5px 8px}.brand h1{font-size:14px}.qa{font-size:9px}.qa small{font-size:8px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <img class="brand-logo" src="./propsphere-logo.svg" alt="PropSphere logo">
+    <div class="brand"><h1>PropSphere QA Report Center</h1><p>Playwright automation · Allure reporting · K6 performance</p></div>
+    <div class="qa">Raja Haroon Jamal<small>QA Department · Full Stack QA Automation Tester</small></div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div><span class="eyebrow">Quality engineering workspace</span><h2>One clear view of every test run.</h2><p>Open detailed Allure results, the modern k6 dashboard, or the separate native k6 execution report.</p><a class="report-link" href="/allure/index.html">Open latest Allure report <span aria-hidden="true">↗</span></a> <a class="report-link" href="/performance/index.html">Open k6 performance report <span aria-hidden="true">↗</span></a> <a class="report-link" href="/performance/native-k6-report.html">Open native k6 report <span aria-hidden="true">↗</span></a></div>
+      <aside class="note"><strong>PropSphere · Marketplace quality</strong><p>Run a suite from the repository root, then generate Allure results to update the detailed run report.</p><p>Run <code>npm run performance:test</code> for 200 read-only k6 search cases, detailed case execution records, and both native and branded reports.</p></aside>
+    </section>
+    <section class="cards" aria-label="Automation suite counts">
+      <article class="card"><b>34</b><span>Screen-specific page objects</span></article><article class="card"><b>40</b><span>Distinct API route/filter cases</span></article><article class="card"><b>8</b><span>Given / When / Then journeys</span></article><article class="card"><b>84</b><span>Screen-specific UI cases</span></article>
+    </section>
+    <section class="panel"><h3>Personalize report appearance</h3><p>Header color and report content theme are separate settings and are saved in this browser.</p>
+      <div class="palettes">
+        <div class="palette-group"><h4>Header palette · 10 colors</h4><div class="swatches" id="headers"></div></div>
+        <div class="palette-group"><h4>Content theme · 8 choices</h4><div class="swatches" id="contents"></div></div>
+      </div>
+    </section>
+    <footer class="footer">PropSphere · Raja Haroon Jamal · QA Department · Full Stack QA Automation Tester</footer>
+  </main>
+  <script>
+    const headers={jade:'#176b61',midnight:'#23334d',ocean:'#087f8c',forest:'#437745',violet:'#6848a8',rose:'#a94b63',amber:'#a76b16',slate:'#485765',cobalt:'#285cc4',charcoal:'#303638'};
+    const contents={light:'Light',dark:'Dark','contrast':'High contrast',grey:'Grey',blue:'Blue',ocean:'Ocean',forest:'Forest',rose:'Rose'};
+    function picker(node,items,kind){for(const [key,value] of Object.entries(items)){const button=document.createElement('button');button.className='swatch';button.type='button';button.dataset.value=key;button.setAttribute('aria-pressed','false');button.innerHTML=kind==='header'?'<i class="dot" style="background:'+value+'"></i>'+key:'<i class="dot" style="background:var(--accent)"></i>'+value;button.onclick=()=>{document.documentElement.dataset[kind]=key;if(kind==='header')document.documentElement.style.setProperty('--head',value);localStorage.setItem('ps-report-'+kind,key);node.querySelectorAll('button').forEach((b)=>b.setAttribute('aria-pressed',String(b===button)))};node.append(button)}}
+    picker(document.querySelector('#headers'),headers,'header');picker(document.querySelector('#contents'),contents,'content');
+    for(const kind of ['header','content']){const saved=localStorage.getItem('ps-report-'+kind);if(saved&&document.querySelector('[data-value="'+saved+'"]'))document.querySelector('[data-value="'+saved+'"]').click()}
+  </script>
+</body>
+</html>

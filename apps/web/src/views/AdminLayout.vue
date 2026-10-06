@@ -36,7 +36,7 @@ function isSelected(item: { to: string; match?: string }) { return item.match ? 
 <template>
   <div class="admin-portal">
     <aside class="admin-sidebar">
-      <RouterLink class="admin-brand" to="/admin"><span class="admin-brand-mark"><ShieldCheck :size="20"/></span><span><b>PropSphere</b><small>ADMIN CONSOLE</small></span></RouterLink>
+      <RouterLink class="admin-brand" to="/admin"><img class="admin-brand-mark" src="/propsphere-mark.svg" alt="PropSphere logo"/><span><b>PropSphere</b><small>ADMIN CONSOLE</small></span></RouterLink>
       <div class="admin-org"><span class="admin-org-icon"><Building2 :size="16"/></span><span><small>ORGANIZATION</small><b>{{ session.session?.user.organizationName || 'Your workspace' }}</b></span></div>
       <nav aria-label="Admin portal navigation" class="admin-side-nav">
         <section v-for="group in groups" :key="group.title"><small class="admin-nav-label">{{ group.title }}</small><RouterLink v-for="item in group.links" :key="item.to" :to="item.to" :class="{ selected: isSelected(item) }"><component :is="item.icon" :size="16"/><span>{{ item.label }}</span></RouterLink></section>

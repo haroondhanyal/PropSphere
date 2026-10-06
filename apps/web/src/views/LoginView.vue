@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Eye, EyeOff, LockKeyhole, ShieldCheck } from 'lucide-vue-next'
 import { api } from '../api'
@@ -13,16 +13,16 @@ const loading = ref(false)
 const rememberMe = ref(true)
 const router = useRouter()
 const route = useRoute()
-const adminPortal = route.query.portal === 'admin'
+const adminPortal = computed(() => route.query.portal === 'admin')
 const session = useSessionStore()
 async function signIn() {
   error.value = ''
   loading.value = true
   try {
     const { data } = await api.post<Session>('/auth/login', { email: email.value, password: password.value, rememberMe: rememberMe.value })
-    if (adminPortal && data.user.role !== 'ADMIN') { error.value = 'This account does not have admin access. Sign in with an administrator account.'; return }
+    if (adminPortal.value && data.user.role !== 'ADMIN') { error.value = 'This account does not have admin access. Sign in with an administrator account.'; return }
     session.setSession(data, rememberMe.value)
-    await router.replace(String(route.query.next || (adminPortal ? '/admin' : '/')))
+    await router.replace(String(route.query.next || (adminPortal.value ? '/admin' : '/')))
   } catch (e: any) { error.value = e.response?.data?.message || 'Could not sign in. Check your email and password.' } finally { loading.value = false }
 }
 </script>

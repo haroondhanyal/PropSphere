@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title>PropSphere</title>
+  <defs>
+    <linearGradient id="brand" x1="12" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#30b7a2"/>
+      <stop offset="1" stop-color="#167a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#f4fbfa"/>
+  <path d="M64 15 14 54v57h35V79h30v32h35V54L64 15Z" fill="url(#brand)"/>
+  <path d="M53 79V61a11 11 0 0 1 22 0v18" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="8"/>
+  <circle cx="64" cy="46" r="5" fill="#fff"/>
+</svg>

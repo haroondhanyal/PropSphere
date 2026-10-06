@@ -6,3 +6,10 @@ coverage
 apps/api/prisma/dev.db
 apps/api/uploads/
 *.tsbuildinfo
+automation/playwright-automation/.env
+automation/playwright-automation/allure-results/
+automation/playwright-automation/allure-report/
+automation/playwright-automation/playwright-report/
+automation/playwright-automation/test-results/
+automation/playwright-automation/.auth/
+automation/performance-testing/k6/report-output/

@@ -14,7 +14,18 @@ const galleryImages = computed(() => { if (!property.value) return []; const ima
 const price = computed(() => property.value ? property.value.purpose === 'RENT' ? `PKR ${Number(property.value.price).toLocaleString()} / month` : `PKR ${(Number(property.value.price) / 10000000).toFixed(2)} Cr` : '')
 const directionsUrl = computed(() => property.value ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent([property.value.streetAddress, property.value.community, property.value.city].filter(Boolean).join(', '))}` : '#')
 const contactOpen = ref(false); const contactMessage = ref(''); const contactPhone = ref(''); const contactError = ref(''); const contactSaving = ref(false)
-async function load() { loading.value = true; try { property.value = (await api.get(`/properties/slug/${route.params.slug}`)).data; if (property.value) { const result = await api.get('/properties', { params: { city: property.value.city, take: 7 } }); related.value = result.data.filter((item: Property) => item.id !== property.value?.id).slice(0, 6) } } catch { property.value = null } finally { loading.value = false } }
+async function load() {
+  loading.value = true
+  try { property.value = (await api.get(`/properties/slug/${route.params.slug}`)).data }
+  catch { property.value = null }
+  finally { loading.value = false }
+  if (!property.value) return
+  try {
+    const propertyId = property.value.id
+    const result = await api.get('/properties', { params: { city: property.value.city, take: 7 } })
+    related.value = result.data.filter((item: Property) => item.id !== propertyId).slice(0, 6)
+  } catch { related.value = [] }
+}
 function toggleSave() { if (!property.value) return; favorites.value = saved.value ? favorites.value.filter((id) => id !== property.value?.id) : [...favorites.value, property.value.id]; localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value)) }
 async function shareProperty() { if (!property.value) return; if (navigator.share) await navigator.share({ title: property.value.title, url: window.location.href }); else await navigator.clipboard.writeText(window.location.href) }
 function startInquiry() { if (!session.session) { void router.push(`/login?next=${encodeURIComponent(route.fullPath)}`); return } contactOpen.value = true }

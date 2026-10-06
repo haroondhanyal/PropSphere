@@ -1,0 +1,31 @@
+{
+  "name": "@propsphere/playwright-automation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:db": "playwright test tests/db-testing",
+    "test:api": "playwright test tests/api-testing",
+    "test:bdd": "playwright test tests/bdd",
+    "test:ui": "playwright test tests/ui-testing",
+    "test:smoke": "playwright test tests/ui-testing/smoke",
+    "test:regression": "playwright test tests/ui-testing/regression",
+    "test:integration": "playwright test tests/ui-testing/integration",
+    "test:negative": "playwright test tests/ui-testing/negative",
+    "test:public": "playwright test tests/ui-testing/smoke/public",
+    "test:admin": "playwright test tests/ui-testing/smoke/admin",
+    "test:workspace": "playwright test tests/ui-testing/smoke/workspace tests/ui-testing/integration/workspace",
+    "test:auth": "playwright test tests/ui-testing/smoke/auth tests/ui-testing/negative/auth",
+    "report": "node ./scripts/generate-report.mjs",
+    "report:open": "allure open ./allure-report",
+    "report:serve": "node ./scripts/serve-report.mjs",
+    "report:screenshots": "node ./scripts/capture-report-screenshots.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@faker-js/faker": "^9.9.0",
+    "allure-commandline": "^2.34.1",
+    "allure-playwright": "^3.2.2",
+    "dotenv": "^16.4.7"
+  }
+}
