@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, BadgeCheck, Bath, BedDouble, Building2, Heart, MapPin, MoveUpRight, Navigation, Share2 } from 'lucide-vue-next'
-import { api, mediaUrl } from '../api'
+import { api, hasSessionToken, mediaUrl } from '../api'
 import PropertyGrid from '../components/PropertyGrid.vue'
 import type { Property } from '../types'
 import { useSessionStore } from '../stores/session'
@@ -20,13 +20,36 @@ async function load() {
   catch { property.value = null }
   finally { loading.value = false }
   if (!property.value) return
+  if (hasSessionToken()) {
+    try {
+      const favoritesResult = await api.get<Property[]>('/properties/favorites')
+      favorites.value = favoritesResult.data.map((item) => item.id)
+      localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value))
+    } catch { /* Keep the local shortlist visible if the API is temporarily unavailable. */ }
+  }
   try {
     const propertyId = property.value.id
     const result = await api.get('/properties', { params: { city: property.value.city, take: 7 } })
     related.value = result.data.filter((item: Property) => item.id !== propertyId).slice(0, 6)
   } catch { related.value = [] }
 }
-function toggleSave() { if (!property.value) return; favorites.value = saved.value ? favorites.value.filter((id) => id !== property.value?.id) : [...favorites.value, property.value.id]; localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value)) }
+async function toggleSave() {
+  if (!property.value) return
+  const wasSaved = saved.value
+  favorites.value = wasSaved ? favorites.value.filter((id) => id !== property.value?.id) : [...favorites.value, property.value.id]
+  localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value))
+  window.dispatchEvent(new Event('favorites-updated'))
+  if (hasSessionToken()) {
+    try {
+      if (wasSaved) await api.delete(`/properties/${property.value.id}/favorite`)
+      else await api.post(`/properties/${property.value.id}/favorite`)
+    } catch {
+      favorites.value = wasSaved ? [...favorites.value, property.value.id] : favorites.value.filter((id) => id !== property.value?.id)
+      localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value))
+      window.dispatchEvent(new Event('favorites-updated'))
+    }
+  }
+}
 async function shareProperty() { if (!property.value) return; if (navigator.share) await navigator.share({ title: property.value.title, url: window.location.href }); else await navigator.clipboard.writeText(window.location.href) }
 function startInquiry() { if (!session.session) { void router.push(`/login?next=${encodeURIComponent(route.fullPath)}`); return } contactOpen.value = true }
 async function submitInquiry() { if (!property.value) return; contactSaving.value = true; contactError.value = ''; try { await api.post('/inquiries', { propertyId: property.value.id, message: contactMessage.value, phone: contactPhone.value || undefined }); contactOpen.value = false; contactMessage.value = ''; contactPhone.value = '' } catch (e: any) { contactError.value = e.response?.data?.message || 'Could not send inquiry.' } finally { contactSaving.value = false } }

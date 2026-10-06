@@ -59,6 +59,7 @@ class PhaseFourService {
   async createStay(dto: StayDto, user: AuthUser) { const stay = await this.db.stayListing.create({ data: { ...dto, organizationId: user.organizationId } }); await this.log(user, 'stay.created', 'StayListing', stay.id); return stay }
   bookings(user: AuthUser) { return this.db.stayBooking.findMany({ where: ['BUYER', 'TENANT'].includes(user.role) ? { guestId: user.sub } : { organizationId: user.organizationId }, include: { stay: true }, orderBy: { checkIn: 'asc' } }) }
   async book(dto: BookingDto, user: AuthUser) {
+    if (dto.checkIn <= new Date()) throw new BadRequestException('Choose a future check-in date')
     if (dto.checkOut <= dto.checkIn) throw new BadRequestException('Check-out must be after check-in')
     const stay = await this.db.stayListing.findFirst({ where: { id: dto.stayId, active: true } })
     if (!stay) throw new NotFoundException('Stay listing not found')

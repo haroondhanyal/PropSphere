@@ -2,14 +2,14 @@
 import { computed, onMounted, ref } from 'vue'
 import { Heart, BedDouble, Bath, MoveUpRight, BadgeCheck } from 'lucide-vue-next'
 import type { Property } from '../types'
-import { api, mediaUrl } from '../api'
+import { api, hasSessionToken, mediaUrl } from '../api'
 
 const props = defineProps<{ property: Property }>()
 const favorites = ref<string[]>(JSON.parse(localStorage.getItem('propsphere-favorites') || '[]'))
 const saved = computed(() => favorites.value.includes(props.property.id))
 const propertyGroup = computed(() => ['WAREHOUSE', 'FACTORY'].includes(props.property.type) ? 'INDUSTRIAL' : ['OFFICE', 'SHOP', 'COMMERCIAL'].includes(props.property.type) ? 'COMMERCIAL' : 'RESIDENTIAL')
 onMounted(async () => {
-  if (!localStorage.getItem('propsphere-token')) return
+  if (!hasSessionToken()) return
   try {
     const { data } = await api.get<Property[]>('/properties/favorites')
     favorites.value = data.map((item) => item.id)
@@ -21,7 +21,7 @@ async function toggleFavorite() {
   favorites.value = wasSaved ? favorites.value.filter((id) => id !== props.property.id) : [...favorites.value, props.property.id]
   localStorage.setItem('propsphere-favorites', JSON.stringify(favorites.value))
   window.dispatchEvent(new Event('favorites-updated'))
-  if (localStorage.getItem('propsphere-token')) {
+  if (hasSessionToken()) {
     try {
       if (wasSaved) await api.delete(`/properties/${props.property.id}/favorite`)
       else await api.post(`/properties/${props.property.id}/favorite`)

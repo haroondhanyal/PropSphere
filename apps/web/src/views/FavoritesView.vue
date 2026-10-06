@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import PropertyGrid from '../components/PropertyGrid.vue'
-import { api } from '../api'
+import { api, hasSessionToken } from '../api'
 import type { Property } from '../types'
 const properties = ref<Property[]>([])
 const loading = ref(true)
 async function load() {
   loading.value = true
   try {
-    if (localStorage.getItem('propsphere-token')) properties.value = (await api.get('/properties/favorites')).data
+    if (hasSessionToken()) properties.value = (await api.get('/properties/favorites')).data
     else {
       const ids: string[] = JSON.parse(localStorage.getItem('propsphere-favorites') || '[]')
       properties.value = ids.length ? (await api.get('/properties', { params: { ids: ids.join(',') } })).data : []
